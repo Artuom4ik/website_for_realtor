@@ -1,8 +1,9 @@
 from django.contrib import admin
 
-from .models import Flat, Complaints, Owner
+from .models import Flat, Complaint, Owner
 
 
+@admin.register(Flat)
 class FlatAdmin(admin.ModelAdmin):
     search_fields = ('town','address','owner',)
     readonly_fields = ['created_at',]
@@ -12,14 +13,11 @@ class FlatAdmin(admin.ModelAdmin):
     raw_id_fields = ('liked_by',)
 
 
-class ComplaintsAdmin(admin.ModelAdmin):
-    raw_id_fields = ("user", "flat")
-
-
+@admin.register(Owner)
 class OwnerAdmin(admin.ModelAdmin):
-    raw_id_fields = ("flat",)
+    raw_id_fields = ('flats',)
 
 
-admin.site.register(Flat, FlatAdmin)
-admin.site.register(Complaints, ComplaintsAdmin)
-admin.site.register(Owner, OwnerAdmin)
+@admin.register(Complaint)
+class ComplaintAdmin(admin.ModelAdmin):
+    raw_id_fields = ("author", "flat")
