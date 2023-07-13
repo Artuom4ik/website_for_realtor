@@ -7,7 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Flat(models.Model):
     owner = models.CharField('ФИО владельца', max_length=200)
     owners_phonenumber = models.CharField('Номер владельца', max_length=20)
-    owner_pure_phone = PhoneNumberField('Нормализированный номер владельца', blank=True)
+    owner_pure_phone = PhoneNumberField('Нормализированный номер владельца', blank=True, null=True)
     liked_by = models.ManyToManyField(User, blank=True, verbose_name='Кто лайкнул:', related_name="liked_flats")
     new_building = models.BooleanField('Новостройка:', null=True, blank=True)
     created_at = models.DateTimeField(
