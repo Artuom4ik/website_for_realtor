@@ -5,10 +5,11 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Flat(models.Model):
+    owner = models.CharField('ФИО владельца', max_length=200)
     owners_phonenumber = models.CharField('Номер владельца', max_length=20)
-    owner_pure_phone = PhoneNumberField(verbose_name="Нормализованный номер владельца:", blank=True)
-    new_building = models.BooleanField(verbose_name="Новостройка:", null=True, blank=True)
-    liked_by = models.ManyToManyField(User, blank=True, related_name="user_liked", verbose_name="Кто лайкнул:")
+    owner_pure_phone = PhoneNumberField('Нормализированный номер владельца', blank=True)
+    liked_by = models.ManyToManyField(User, blank=True, verbose_name='Кто лайкнул:', related_name="liked_flats")
+    new_building = models.BooleanField('Новостройка:', null=True, blank=True)
     created_at = models.DateTimeField(
         'Когда создано объявление',
         default=timezone.now,
@@ -59,15 +60,10 @@ class Owner(models.Model):
     owner = models.CharField('ФИО владельца:', max_length=200)
     owners_phonenumber = models.CharField('Номер владельца:', max_length=20)
     owner_pure_phone = PhoneNumberField(verbose_name="Нормализованный номер владельца:", blank=True)
-    flat = models.ManyToManyField(Flat, verbose_name="Квартиры в собсвенности:")
+    flats = models.ManyToManyField(Flat, verbose_name="Квартиры в собсвенности:", related_name='owners')
 
 
-class Complaints(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Кто жаловался:", related_name="user_complained")
-    flat = models.ForeignKey(Flat, on_delete=models.CASCADE, verbose_name="Квартира, на которую пожаловались:", related_name="flat")
+class Complaint(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='complaints', verbose_name='Кто жаловался:')
+    flat = models.ForeignKey(Flat, on_delete=models.CASCADE, related_name='complaints', verbose_name='Квартира, на которую пожаловались:')
     text = models.TextField('Текст жалобы')
-
-
-class Like(models.Model):
-    flat = models.ForeignKey(Flat, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
