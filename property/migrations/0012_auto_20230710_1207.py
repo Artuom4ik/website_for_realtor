@@ -5,7 +5,7 @@ from django.db import migrations
 
 def normalize_phonenumber(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-    for flat in Flat.objects.all():
+    for flat in Flat.objects.all().iterator():
         if phonenumbers.is_valid_number(phonenumbers.parse(flat.owners_phonenumber, "RU")):
             flat.owner_pure_phone = phonenumbers.parse(flat.owners_phonenumber, "RU")
             flat.save()
