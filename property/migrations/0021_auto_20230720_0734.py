@@ -3,18 +3,11 @@
 from django.db import migrations
 
 
-def transfer_flat(apps, schema):
+def transfer_flats(apps, schema):
     Flat = apps.get_model('property', 'Flat')
     Owner = apps.get_model('property', 'Owner')
     for owner in Owner.objects.all().iterator():
-        flats = Flat.objects.filter(owner=owner.name)
-        owner.flats.set(flats)
-
-
-def move_backward(apps, schema_editor):
-    Owner = apps.get_model('property', 'Owner')
-    for owner in Owner.objects.all().iterator():
-        owner.flats.set([])
+        owner.flats.set(Flat.objects.filter(owner=owner.name, owner_pure_phone=owner.pure_phone))
 
 
 class Migration(migrations.Migration):
@@ -24,5 +17,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(transfer_flat, move_backward)
+        migrations.RunPython(transfer_flats),
     ]
