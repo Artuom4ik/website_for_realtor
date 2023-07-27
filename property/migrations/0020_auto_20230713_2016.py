@@ -8,7 +8,7 @@ def transfer_owner(apps, schema_editor):
     Owner = apps.get_model('property', 'Owner')
     for flat in Flat.objects.all().iterator():
         Owner.objects.get_or_create(
-            name=flat.owner, 
+            name=flat.owner,
             phonenumber=flat.owners_phonenumber,
             pure_phone=flat.owner_pure_phone)
 
