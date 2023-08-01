@@ -59,8 +59,14 @@ class Owner(models.Model):
     pure_phone = PhoneNumberField(verbose_name="Нормализованный номер владельца:", blank=True)
     flats = models.ManyToManyField(Flat, verbose_name="Квартиры в собсвенности:", related_name='owners', blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Complaint(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='complaints', verbose_name='Кто жаловался:')
     flat = models.ForeignKey(Flat, on_delete=models.CASCADE, related_name='complaints', verbose_name='Квартира, на которую пожаловались:')
     text = models.TextField('Текст жалобы')
+
+    def __str__(self):
+        return f'{self.author}: {self.text}'
